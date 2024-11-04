@@ -1,0 +1,346 @@
+#:kivy 2.1.0
+###########################
+
+# COLOUR PALLET (DARK THEME)
+# PRIMARY BACKGROUND: (0.0706, 0.0706, 0.0706, 1)
+# RAISED MENU GREY: (1,1,1,0.05)
+# PURPLE MAIN: (0.733, 0.525, 0.988, 1)
+# GREEN MAIN: (0.529, 1, 0.749, 1)
+# ERR: (0.812, 0.4, 0.475, 1)
+
+###########################
+
+
+<MainMenu>:
+    orientation: "vertical"
+
+    checkBoxRep: checkBoxOne    #Repeating
+    checkBoxInt: checkBoxTwo    #Instrumentals
+    checkBoxRem: checkBoxThree  #Remixes
+    searchBoxArtist: searchBox  #Search Box
+    srchResltTxt1: srchOneT
+    srchResltImg1: srchOneI
+    srchResltTxt2: srchTwoT
+    srchResltImg2: srchTwoI
+    srchResltTxt3: srchThreeT
+    srchResltImg3: srchThreeI
+    createButton: crt_playlist
+    playlistName: name_box
+
+
+    canvas:
+
+        #Backdrop
+        Color:
+            rgba: (0.0706, 0.0706, 0.0706, 1)
+        Rectangle:
+            pos: 0,0
+            size: root.width, root.height
+        
+
+        ##### FILTER SUBMENU #####
+
+        #Green menu box accent
+        Color:
+            rgba: (0.529, 1, 0.749, 1)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 60))/2, root.height*(6.05/10)
+            size: (root.width - 50), root.height*(2.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+        #Accent cover (backdrop)
+        Color:
+            rgba: (0.0706, 0.0706, 0.0706, 1)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 50))/2, root.height*(6/10)
+            size: (root.width - 50), root.height*(2.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+        #Menu box
+        Color:
+            rgba: (1,1,1,0.05)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 50))/2, root.height*(6/10)
+            size: (root.width - 50), root.height*(2.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+
+        ##### SEARCH SUBMENU #####
+
+        #Green menu box accent
+        Color:
+            rgba: (0.529, 1, 0.749, 1)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 60))/2, root.height*(2.65/10)
+            size: (root.width - 50), root.height*(3.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+        #Accent cover (backdrop)
+        Color:
+            rgba: (0.0706, 0.0706, 0.0706, 1)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 50))/2, root.height*(2.6/10)
+            size: (root.width - 50), root.height*(3.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+        #Menu box
+        Color:
+            rgba: (1,1,1,0.05)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 50))/2, root.height*(2.6/10)
+            size: (root.width - 50), root.height*(3.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+        
+        ##### NAME & GO! SUBMENU #####
+
+        #Green menu box accent
+        Color:
+            rgba: (0.529, 1, 0.749, 1)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 60))/2, root.height*(0.3/10)
+            size: (root.width - 50), root.height*(2.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+        #Accent cover (backdrop)
+        Color:
+            rgba: (0.0706, 0.0706, 0.0706, 1)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 50))/2, root.height*(0.25/10)
+            size: (root.width - 50), root.height*(2.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+        #Menu box
+        Color:
+            rgba: (1,1,1,0.05)
+        RoundedRectangle:
+            pos: (root.width - (root.width - 50))/2, root.height*(0.25/10)
+            size: (root.width - 50), root.height*(2.02/10)
+            radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+
+    ##### CHECK BOXES #####
+
+    CheckBox:
+        id: checkBoxOne
+        pos: (root.width*(1.1/10)), (root.height*(7.05/10))
+        size: root.width*0.0555556,root.height*0.0326087
+
+    CheckBox:
+        id: checkBoxTwo
+        pos: (root.width*(1.1/10)), (root.height*(6.65/10))
+        size: root.width*0.0555556,root.height*0.0326087
+
+    CheckBox:
+        id: checkBoxThree
+        pos: (root.width*(1.1/10)), (root.height*(6.25/10))
+        size: root.width*0.0555556,root.height*0.0326087
+    
+
+    ##### SEARCH BOX #####
+
+    TextInput:
+        id: searchBox
+        text: ""
+        hint_text: "Desired Artist Name"
+        multiline: False
+        pos: root.width*(1.1/10), (root.height*(4.6/10))
+        height: root.height*0.0376087
+        width: root.width*(7.1/10)
+        text_validate_unfocus: False
+        on_text: root.read_text_input()
+        font_name: 'segoeui.ttf'
+
+    
+    TextInput:
+        id: name_box
+        text: ""
+        hint_text: "Playlist Name"
+        multiline: False
+        pos: root.width*(1.1/10), (root.height*(1.3/10))
+        height: root.height*0.0376087
+        width: root.width*(7.1/10)
+        text_validate_unfocus: False
+        font_name: 'segoeui.ttf'
+
+
+    ##### SEARCH RESULTS #####
+
+    # 1 Text
+    Button:
+        id: srchOneT
+        pos: root.width*(2.2/10), (root.height*(4.0/10))
+        height: root.height*(0.5/10)
+        width: root.width*(6/10)
+        on_press: root.srch_select(0)
+        opacity: 1
+        disabled: False
+        halign: 'left'
+        valign: 'center'
+        text_size: (self.width - 20),self.height
+        background_normal: 'RaisedMenuGreySample.png'
+        font_name: 'segoeui.ttf'
+
+    # 1 Image
+    Button:
+        id: srchOneI
+        pos: root.width*(1.1/10), (root.height*(4.0/10))
+        height: root.height*(0.5/10)
+        width: root.height*(0.5/10)
+        on_press: root.srch_select(0)
+        opacity: 1
+        disabled: False
+        background_normal: 'RaisedMenuGreySample.png'
+    
+    # 2 Text
+    Button:
+        id: srchTwoT
+        pos: root.width*(2.2/10), (root.height*(3.4/10))
+        height: root.height*(0.5/10)
+        width: root.width*(6/10)
+        on_press: root.srch_select(1)
+        opacity: 1
+        disabled: False
+        background_normal: 'RaisedMenuGreySample.png'
+        halign: 'left'
+        valign: 'center'
+        text_size: (self.width - 20),self.height
+        font_name: 'segoeui.ttf'
+
+
+    # 2 Image
+    Button:
+        id: srchTwoI
+        pos: root.width*(1.1/10), (root.height*(3.4/10))
+        height: root.height*(0.5/10)
+        width: root.height*(0.5/10)
+        on_press: root.srch_select(1)
+        opacity: 1
+        disabled: False
+        background_normal: 'RaisedMenuGreySample.png'
+    
+    # 3 Text
+    Button:
+        id: srchThreeT
+        pos: root.width*(2.2/10), (root.height*(2.8/10))
+        height: root.height*(0.5/10)
+        width: root.width*(6/10)
+        on_press: root.srch_select(2)
+        opacity: 1
+        disabled: False
+        background_normal: 'RaisedMenuGreySample.png'
+        halign: 'left'
+        valign: 'center'
+        text_size: (self.width - 20),self.height
+        font_name: 'segoeui.ttf'
+
+
+    # 3 Image
+    Button:
+        id: srchThreeI
+        pos: root.width*(1.1/10), (root.height*(2.8/10))
+        height: root.height*(0.5/10)
+        width: root.height*(0.5/10)
+        on_press: root.srch_select(2)
+        opacity: 1
+        disabled: False
+        background_normal: 'RaisedMenuGreySample.png'
+
+    # GO! Button
+    Button:
+        id: crt_playlist
+        pos: root.width*(2.8/10), (root.height*(0.6/10))
+        height: root.height*(0.5/10)
+        width: root.width*(4/10)
+        on_press: root.create_playlist(root.selected_artist, root.playlistName)
+        opacity: 1
+        disabled: False
+        background_normal: 'Button.png'
+        background_down: 'Button_down.png'
+        halign: 'center'
+        valign: 'center'
+        text_size: (self.width - 20),self.height
+        text: "Create Playlist"
+        font_name: 'AstroSpace-eZ2Bg.ttf'
+    
+    ##### LABELS #####
+
+    #Title
+    Label:
+        font_name: 'AstroSpace-eZ2Bg.ttf'
+        color: (1,1,1,1) #
+        font_size: (root.width+root.height)*0.03322259 #40pt
+        center_x: root.width*(5/10)
+        center_y: root.height*(9/10)
+        text: "Spotify Tools"
+
+    #Desc. (WIP)
+    Label:
+        font_name: 'segoeui.ttf'
+        color: (1,1,1,1)#1204
+        font_size: (root.width+root.height)*0.0141196 #17pt
+        center_x: root.width*(5/10)
+        center_y: root.height*(8.5/10)
+        text: "Create a playlist with all of an artist's tracks"
+
+
+    ### FILTERS SUBMENU ###
+
+    #Filters Title
+    Label:
+        font_name: 'AstroSpace-eZ2Bg.ttf'
+        color: (1,1,1,1)
+        font_size: (root.width+root.height)*0.0166113 #20pt
+        center_x: root.width*(2.31/10)
+        center_y: root.height*(7.72/10)
+        text: "Filters"
+
+    #Checkbox 1 Label
+    Label:
+        font_name: 'segoeui.ttf'
+        color: (1,1,1,1)
+        font_size: (root.width+root.height)*0.01245847 #15pt
+        size: self.texture_size
+        pos: root.width*(1.7/10),root.height*(7.11/10)
+        text: "Filter out repeated tracks"
+
+    #Checkbox 2 Label
+    Label:
+        font_name: 'segoeui.ttf'
+        color: (1,1,1,1)
+        font_size: (root.width+root.height)*0.01245847 #15pt
+        size: self.texture_size
+        pos: root.width*(1.7/10),root.height*(6.71/10)
+        text: "Filter out Instrumental Tracks"
+
+    #Checkbox 3 Label
+    Label:
+        font_name: 'segoeui.ttf'
+        color: (1,1,1,1)
+        font_size: (root.width+root.height)*0.01245847 #15pt
+        size: self.texture_size
+        pos: root.width*(1.7/10),root.height*(6.31/10)
+        text: "Filter out Remix Tracks"
+    
+
+    ### SEARCH SUBMENU ###
+
+    #Search Title
+    Label:
+        font_name: 'AstroSpace-eZ2Bg.ttf'
+        color: (1,1,1,1)
+        font_size: (root.width+root.height)*0.0166113 #20pt
+        center_x: root.width*(2.31/10)
+        center_y: root.height*(5.3/10)
+        text: "Search"
+    
+    ### NAME AND GO! SUBMENU ###
+
+    #Name title
+    Label:
+        font_name: 'AstroSpace-eZ2Bg.ttf'
+        color: (1,1,1,1)
+        font_size: (root.width+root.height)*0.0166113 #20pt
+        center_x: root.width*(3.1/10)
+        center_y: root.height*(1.94/10)
+        text: "Album Name"

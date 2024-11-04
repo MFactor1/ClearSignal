@@ -1,0 +1,50 @@
+#:kivy 2.3.0
+<YesBtn>:
+	canvas:
+		Color:
+			rgba: self.color
+		Rectangle:
+			pos: 0,0
+			size: self.width / 2, self.height
+
+	Label:
+		font_size: 50
+		center_x: self.parent.width / 4
+		center_y: self.parent.height / 2
+		text: "Yes"
+
+<NoBtn>:
+	canvas:
+		Color:
+			rgba: self.color
+		Rectangle:
+			pos: self.width / 2, 0
+			size: self.width / 2, self.height
+
+	Label:
+		font_size: 50
+		center_x: self.parent.width * 3 / 4
+		center_y: self.parent.height / 2
+		text: "No"
+
+<CommWnd>:
+	kp: key_press
+	yes: yes_btn
+	no: no_btn
+
+	Label:
+		id: key_press
+		font_size: 50
+		center_x: root.width / 2
+		top: root.top - 50
+		text: "Comm App"
+
+	YesBtn:
+		id: yes_btn
+		size: root.width, root.height
+		center: self.parent.center
+
+	NoBtn:
+		id: no_btn
+		size: root.width, root.height
+		center: self.parent.center
