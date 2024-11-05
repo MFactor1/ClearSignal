@@ -77,6 +77,8 @@ class CustomBtn(Indicator):
 class Initializer():
 
     def readIni(self):
+        global ini_error
+        global ini_error_msg
         self.load_defaults()
 
         with open('comm.ini', 'r') as ini:
@@ -95,8 +97,6 @@ class Initializer():
 
                 if tok_text not in Toks:
                     self.load_defaults()
-                    global ini_error
-                    global ini_error_msg
                     ini_error = True
                     ini_error_msg = f"Error in .ini file at line {i+1}: {line}"
                     return
@@ -120,8 +120,6 @@ class Initializer():
 
             except Exception as e:
                 self.load_defaults()
-                global ini_error
-                global ini_error_msg
                 ini_error = True
                 ini_error_msg = f"Error in .ini file at line {i+1}: {line}"
                 return
