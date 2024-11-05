@@ -55,8 +55,7 @@ class Indicator(Widget):
                 self.deac()
             else:
                 mult = elapsed / INI[Toks.FADE_TM]
-                new = [self.active_colour[i] + ((BUTTON_BASE[i] - self.active_colour[i]) * ((5 ** mult) / 4 - 0.25)) for i in range(3)]
-                new.append(self.active_colour[3])
+                new = [self.active_colour[i] + ((BUTTON_BASE[i] - self.active_colour[i]) * ((5 ** mult) / 4 - 0.25)) for i in range(4)]
                 self.color = new
 
 
@@ -86,38 +85,46 @@ class Initializer():
         for i, line in enumerate(lines):
             if line.strip() == '':
                 continue
-            if line.strip()[0] == '#':
+            if line.strip().startswith('#'):
                 continue
+            try:
+                tok_text, val = line.split(':', maxsplit=1)
 
-            tok_text, val = line.split(':', maxsplit=1)
+                tok_text = tok_text.strip()
+                val = val.strip()
 
-            tok_text = tok_text.strip()
-            val = val.strip()
+                if tok_text not in Toks:
+                    self.load_defaults()
+                    global ini_error
+                    global ini_error_msg
+                    ini_error = True
+                    ini_error_msg = f"Error in .ini file at line {i+1}: {line}"
+                    return
 
-            if tok_text not in Toks:
+                tok = Toks(tok_text)
+
+                if tok in [Toks.CUSTOM_ACTV, Toks.YES_ACTV, Toks.NO_ACTV]:
+                    val = val.lstrip("[").rstrip("]")
+                    val = [float(num.strip()) for num in val.split(",")]
+                    alpha = val[3]
+                    val = [val[i] / 255 for i in range(3)]
+                    val.append(alpha)
+                elif tok in [Toks.CUSTOM_TXT, Toks.YES_TXT, Toks.NO_TXT, Toks.HEADER_TXT]:
+                    val = val.strip('"')
+                elif tok in [Toks.CUSTOM_MAP, Toks.YES_MAP, Toks.NO_MAP]:
+                    val = int(val)
+                elif tok in [Toks.FADE_TM]:
+                    val = float(val)
+                elif tok in [Toks.DEBUG]:
+                    val = val.lower() == "true"
+
+            except Exception as e:
                 self.load_defaults()
                 global ini_error
                 global ini_error_msg
                 ini_error = True
                 ini_error_msg = f"Error in .ini file at line {i+1}: {line}"
                 return
-
-            tok = Toks(tok_text)
-
-            if tok in [Toks.CUSTOM_ACTV, Toks.YES_ACTV, Toks.NO_ACTV]:
-                val = val.lstrip("[").rstrip("]")
-                val = [float(num.strip()) for num in val.split(",")]
-                alpha = val[3]
-                val = [val[i] / 255 for i in range(3)]
-                val.append(alpha)
-            elif tok in [Toks.CUSTOM_TXT, Toks.YES_TXT, Toks.NO_TXT, Toks.HEADER_TXT]:
-                val = val.strip('"')
-            elif tok in [Toks.CUSTOM_MAP, Toks.YES_MAP, Toks.NO_MAP]:
-                val = int(val)
-            elif tok in [Toks.FADE_TM]:
-                val = float(val)
-            elif tok in [Toks.DEBUG]:
-                val = val.lower() == "true"
 
             INI[tok] = val
 
