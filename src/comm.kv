@@ -3,48 +3,86 @@
 	canvas:
 		Color:
 			rgba: self.color
-		Rectangle:
-			pos: 0,0
-			size: self.width / 2, self.height
+		RoundedRectangle:
+			pos: self.x,self.y
+			size: self.width, self.height
+			radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
 
 	Label:
 		font_size: 50
-		center_x: self.parent.width / 4
-		center_y: self.parent.height / 2
-		text: "Yes"
+		center: self.parent.center
+		text: self.parent.text
 
 <NoBtn>:
 	canvas:
 		Color:
 			rgba: self.color
-		Rectangle:
-			pos: self.width / 2, 0
-			size: self.width / 2, self.height
+		RoundedRectangle:
+			pos: self.x,self.y
+			size: self.width, self.height
+			radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
 
 	Label:
 		font_size: 50
-		center_x: self.parent.width * 3 / 4
-		center_y: self.parent.height / 2
-		text: "No"
+		center: self.parent.center
+		text: self.parent.text
+
+<CustomBtn>:
+	canvas:
+		Color:
+			rgba: self.color
+		RoundedRectangle:
+			pos: self.x,self.y
+			size: self.width, self.height
+			radius: [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+	Label:
+		font_size: 50
+		center: self.parent.center
+		text: self.parent.text
 
 <CommWnd>:
+	rows: 2
+	cols: 3
+	size: 10, 10
+	pos: 0,0
+	spacing: [10, 10]
+	padding: [10, 10]
 	kp: key_press
 	yes: yes_btn
 	no: no_btn
+	custom: custom_btn
+
+	canvas:
+		Color:
+			rgba: [33/255, 33/255, 33/255, 1]
+		Rectangle:
+			pos: 0,0
+			size: root.width, root.height
+
+	Widget:
+		size_hint_y: None
+		size_hint_x: None
+		width: 0
 
 	Label:
 		id: key_press
-		font_size: 50
+		font_size: self.parent.font_size
 		center_x: root.width / 2
 		top: root.top - 50
-		text: "Comm App"
+		text: self.parent.header_text
+		size_hint_y: 0.3
+
+	Widget:
+		size_hint_y: None
+		size_hint_x: None
+		width: 0
 
 	YesBtn:
 		id: yes_btn
-		size: root.width, root.height
-		center: self.parent.center
 
 	NoBtn:
 		id: no_btn
-		size: root.width, root.height
-		center: self.parent.center
+
+	CustomBtn:
+		id: custom_btn
