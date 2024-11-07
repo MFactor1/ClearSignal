@@ -44,10 +44,12 @@
 <CmdWnd>:
 	rows: 2
 	cols: 3
-	size: 10, 10
-	pos: 0,0
 	spacing: [10, 10]
 	padding: [10, 10]
+	kp: key_press
+	yes: yes_btn
+	no: no_btn
+	custom: custom_btn
 
 	canvas:
 		Color:
@@ -84,11 +86,38 @@
 		id: custom_btn
 
 <CommandScreen>:
-	GridLayout:
+	cmd_wnd: cmd_wnd
+	CmdWnd:
+		id: cmd_wnd
 
-ScreenManager:
-	id: screen_manager
-	CommandScreen:
-		id: cmd_screen
-		name: 'CommandScreen'
-		manager: 'screen_manager'
+<Key>:
+	canvas:
+		Color:
+			rgba: [50/255, 50/255, 50/255, 0.8]
+		RoundedRectangle:
+			pos: self.pos
+			size: self.size
+			radius : [(15, 15), (15, 15), (15, 15), (15, 15)]
+
+	Label:
+		font_size: 30
+		center: self.parent.center
+		text: root.text
+
+<KeyWnd>:
+	rows: 5
+	cols: 10
+	spacing: [10, 10]
+	padding: [10, 10]
+
+	canvas.before:
+		Color:
+			rgba: [33/255, 33/255, 33/255, 1]
+		Rectangle:
+			pos: 0,0
+			size: root.width, root.height
+
+<KeyboardScreen>:
+	key_wnd: key_wnd
+	KeyWnd:
+		id: key_wnd
