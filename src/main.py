@@ -10,6 +10,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.properties import ListProperty, StringProperty
 from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager, Screen
 
 BUTTON_BASE = [50/255, 50/255, 50/255, 0.8]
 INI = dict()
@@ -141,21 +142,22 @@ class Initializer():
         INI[Toks.DEBUG] = False
 
 
-class CommWnd(GridLayout):
-    initializer = Initializer()
-    initializer.readIni()
+class CommandScreen(Screen):
+    def on_enter(self, *args):
+        initializer = Initializer()
+        initializer.readIni()
 
-    kp = ObjectProperty(None)
-    yes = ObjectProperty(None)
-    no = ObjectProperty(None)
-    custom = ObjectProperty(None)
+        kp = self.ids.key_press
+        yes = self.ids.yes_btn
+        no = self.ids.no_btn
+        custom = self.ids.custom_btn
 
-    if ini_error:
-        header_text = StringProperty(ini_error_msg)
-        font_size = 20
-    else:
-        header_text = StringProperty(INI[Toks.HEADER_TXT])
-        font_size = 50
+        if ini_error:
+            header_text = StringProperty(ini_error_msg)
+            font_size = 20
+        else:
+            header_text = StringProperty(INI[Toks.HEADER_TXT])
+            font_size = 50
 
     def on_key_down(self, window, key, scancode, codepoint, modifiers):
         try:
@@ -179,7 +181,8 @@ class CommWnd(GridLayout):
 
 class CommApp(App):
     def build(self):
-        wnd = CommWnd()
+        screen_manager = ScreenManager()
+        wnd = CommandScreen()
         Window.bind(on_key_down=wnd.on_key_down)
         Clock.schedule_interval(wnd.update, 1.0/30)
         return wnd

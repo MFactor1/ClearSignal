@@ -41,17 +41,13 @@
 		center: self.parent.center
 		text: self.parent.text
 
-<CommWnd>:
+<CmdWnd>:
 	rows: 2
 	cols: 3
 	size: 10, 10
 	pos: 0,0
 	spacing: [10, 10]
 	padding: [10, 10]
-	kp: key_press
-	yes: yes_btn
-	no: no_btn
-	custom: custom_btn
 
 	canvas:
 		Color:
@@ -67,10 +63,10 @@
 
 	Label:
 		id: key_press
-		font_size: self.parent.font_size
+		font_size: root.font_size
 		center_x: root.width / 2
 		top: root.top - 50
-		text: self.parent.header_text
+		text: root.header_text
 		size_hint_y: 0.3
 
 	Widget:
@@ -86,3 +82,13 @@
 
 	CustomBtn:
 		id: custom_btn
+
+<CommandScreen>:
+	GridLayout:
+
+ScreenManager:
+	id: screen_manager
+	CommandScreen:
+		id: cmd_screen
+		name: 'CommandScreen'
+		manager: 'screen_manager'

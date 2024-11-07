@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/matthewnesbitt/gitrepos/button-communicator/src/kivy_venv"
+set -gx VIRTUAL_ENV "/home/matthewnesbitt/gitrepos/accessibility-communicator/src/kivy_venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
