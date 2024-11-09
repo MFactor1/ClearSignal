@@ -4,10 +4,9 @@ from enum import Enum
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.gridlayout import GridLayout
-from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
 from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.properties import ListProperty, StringProperty
+from kivy.properties import ListProperty, StringProperty, NumericProperty, ObjectProperty
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.label import Label
@@ -111,12 +110,25 @@ class Initializer():
                     alpha = val[3]
                     val = [val[i] / 255 for i in range(3)]
                     val.append(alpha)
+
                 elif tok in [Toks.CUSTOM_TXT, Toks.YES_TXT, Toks.NO_TXT, Toks.HEADER_TXT]:
                     val = val.strip('"')
+
                 elif tok in [Toks.CUSTOM_MAP, Toks.YES_MAP, Toks.NO_MAP]:
+                    dev_val = 0 # Should never actually be 0, just to satisfy linter
+                    if tok == Toks.CUSTOM_MAP:
+                        dev_val = 51
+                    elif tok == Toks.NO_MAP:
+                        dev_val = 50
+                    elif tok == Toks.YES_MAP:
+                        dev_val = 49
+
                     val = int(val)
+                    val = {val, dev_val}
+
                 elif tok in [Toks.FADE_TM]:
                     val = float(val)
+
                 elif tok in [Toks.DEBUG]:
                     val = val.lower() == "true"
 
@@ -136,9 +148,9 @@ class Initializer():
         INI[Toks.YES_TXT] = "Yes"
         INI[Toks.NO_TXT] = "No"
         INI[Toks.HEADER_TXT] = "Comm App"
-        INI[Toks.YES_MAP] = 1073742097
-        INI[Toks.NO_MAP] = 281
-        INI[Toks.CUSTOM_MAP] = 280
+        INI[Toks.YES_MAP] = {1073742097, 49}
+        INI[Toks.NO_MAP] = {281, 50}
+        INI[Toks.CUSTOM_MAP] = {280, 51}
         INI[Toks.FADE_TM] = 1.5
         INI[Toks.DEBUG] = False
 
@@ -166,11 +178,11 @@ class CmdWnd(GridLayout):
 
         if INI[Toks.DEBUG]:
             self.header_text = f"pressed '{char}' ({key})"
-        if key in [INI[Toks.YES_MAP], 49]:
+        if key in INI[Toks.YES_MAP]:
             self.yes.actv()
-        elif key in [INI[Toks.NO_MAP], 50]:
+        elif key in INI[Toks.NO_MAP]:
             self.no.actv()
-        elif key in [INI[Toks.CUSTOM_MAP], 51]:
+        elif key in INI[Toks.CUSTOM_MAP]:
             self.custom.actv()
 
     def update(self, dt):
@@ -189,61 +201,122 @@ class CommandScreen(Screen):
 
 class Key(Widget):
     text = StringProperty('')
+    font = StringProperty('')
+    font_size = NumericProperty()
+    font_mult = NumericProperty()
+    alpha = NumericProperty()
 
 class KeyWnd(GridLayout):
     def __init__(self, **kwargs):
         super(KeyWnd, self).__init__(**kwargs)
 
-        self.text = 'test text testsdf fkjsdl dl sdlk test test text nba'
         self.key_objs = dict()
         self.key_maps = dict()
+        self.selected_key = "0,0" # TODO: Objectize this, to make conversion easier
 
-        for _ in range(4):
+        for _ in range(5):
             self.add_widget(Widget(size_hint_x=None,size_hint_y=None,width=0))
 
         self.title = Label(font_size=50, halign='center', text='Keyboard')
         self.title.center_x = self.center_x + 100
         self.add_widget(self.title)
 
+        for _ in range(10):
+            self.add_widget(Widget(size_hint_x=None,size_hint_y=None,width=0))
+
+        #self.add_widget(Label(font_size=50, text=self.text, halign='left'))
+
+        self.typed_text = Label(
+                            font_size=35,
+                            halign='left',
+                            valign='center',
+                            text_size=(Window.width * 0.9, self.height),
+                            text='')
+
+        self.add_widget(self.typed_text)
+        Window.bind(on_resize=self.window_size_update)
+
         for _ in range(5):
             self.add_widget(Widget(size_hint_x=None,size_hint_y=None,width=0))
 
-        self.add_widget(Label(font_size=50, text=self.text, halign='left'))
-        """
-        self.add_widget(Label(
-                            font_size=20,
-                            halign='left',
-                            text_size=(self.width * 10, self.height),
-                            text=self.text))
-        """
-
-        for _ in range(9):
-            self.add_widget(Widget(size_hint_x=None,size_hint_y=None,width=0))
-
-        keys = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-                'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '\u232B',
-                'z', 'x', 'c', 'v', 'b', 'n', 'm', '.', '\u2423', 'CLEAR']
+        keys = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'CLEAR',
+                'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'NUMS', '\u232B',
+                'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '?', '\u2423']
 
         for i, disp_char in enumerate(keys):
+            key_font = 'fonts/NotoSans.ttf'
+            font_mult = 1
             if disp_char == '\u232B':
-                char = '\b'
+                font_mult = 1.5
+                char = 'DEL'
+                key_font = 'fonts/FreeMono.ttf'
             elif disp_char == '\u2423':
+                font_mult = 1.5
                 char = ' '
+                key_font = 'fonts/FreeMono.ttf'
             elif disp_char == 'CLEAR':
+                font_mult = 0.6
                 char = 'CLR'
+            elif disp_char == 'NUMS':
+                font_mult = 0.6
+                char = 'NUMS'
             else:
                 char = disp_char
 
-            pos = f"{i - 10 * (int(i / 10))},{int(i / 10)}"
-            self.key_objs[pos] = Key(text=disp_char)
+            pos = f"{i - 11 * (int(i / 11))},{int(i / 11)}"
+            self.key_objs[pos] = Key(text=disp_char, font=key_font, font_size=(Window.width + Window.height) * 0.02 * font_mult, font_mult=font_mult, alpha=0.07)
             self.key_maps[pos] = char
             self.add_widget(self.key_objs[pos])
+
+            self.key_objs["0,0"].alpha = 0.3
+
+    def window_size_update(self, *args):
+        self.typed_text.text_size = (Window.width * 0.9, self.typed_text.height)
+
+        for key in self.key_objs.values():
+            key.font_size = (Window.width + Window.height) * 0.02 * key.font_mult
 
     def update(self, dt):
         pass
 
     def on_key_down(self, window, key, scancode, codepoint, modifiers):
-        pass
+        x, y = self.selected_key.split(',')
+        x = int(x)
+        y = int(y)
+
+        if key in INI[Toks.YES_MAP]:
+            char = self.key_maps[self.selected_key]
+            if char == 'CLR':
+                self.typed_text.text = ''
+            elif char == 'DEL':
+                self.typed_text.text = self.typed_text.text[:-1]
+            elif char == 'NUMS':
+                pass # TODO: Implement typing with numbers
+            else:
+                self.typed_text.text = self.typed_text.text + char
+        elif key in INI[Toks.NO_MAP]:
+            y = self.mv_down(y)
+            self.change_selected(x,y)
+        elif key in INI[Toks.CUSTOM_MAP]:
+            x = self.mv_right(x)
+            self.change_selected(x,y)
+
+    def change_selected(self, x, y):
+        self.key_objs[self.selected_key].alpha = 0.07 # TODO: Make this a constant
+        self.selected_key = f"{x},{y}"
+        self.key_objs[self.selected_key].alpha = 0.3 # TODO: Make this a constant
+
+    def mv_right(self, val: int) -> int:
+        if val < 10:
+            return val + 1
+        else:
+            return 0
+
+    def mv_down(self, val: int) -> int:
+        if val < 2:
+            return val + 1
+        else:
+            return 0
 
 class KeyboardScreen(Screen):
     key_wnd = ObjectProperty(None)
@@ -265,7 +338,6 @@ class MyScreenManager(ScreenManager):
             self.key_scr.update(dt)
 
     def on_key_down(self, window, key, scancode, codepoint, modifiers):
-        print(f"Pressed {key}")
         if key == 32:
             if self.current == 'CommandScreen':
                 self.current = 'KeyboardScreen'

@@ -93,20 +93,21 @@
 <Key>:
 	canvas:
 		Color:
-			rgba: [50/255, 50/255, 50/255, 0.8]
+			rgba: [255/255, 255/255, 255/255, root.alpha]
 		RoundedRectangle:
 			pos: self.pos
 			size: self.size
 			radius : [(15, 15), (15, 15), (15, 15), (15, 15)]
 
 	Label:
-		font_size: 30
+		font_size: root.font_size
 		center: self.parent.center
 		text: root.text
+		font_name: root.font
 
 <KeyWnd>:
 	rows: 5
-	cols: 10
+	cols: 11
 	spacing: [10, 10]
 	padding: [10, 10]
 
